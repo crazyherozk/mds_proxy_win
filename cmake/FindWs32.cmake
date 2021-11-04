@@ -1,0 +1,7 @@
+function(FindWs32)
+    if(TARGET ws32_internal)
+        return()
+    endif()
+  add_library(ws32_internal INTERFACE)
+  target_link_libraries(ws32_internal INTERFACE "$<BUILD_INTERFACE:ws2_32;wsock32;Iphlpapi>")
+endfunction()
