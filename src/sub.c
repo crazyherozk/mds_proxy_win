@@ -1,6 +1,6 @@
-#include <zmq/zmq.h>
 #include "list.h"
 #include "encode.h"
+#include <zmq/zmq.h>
 
 #define NR_CACHE 1024*8 /*订阅缓存数*/
 
@@ -40,6 +40,7 @@ static void clear_ctx(void)
     pthread_mutex_lock(&mutex);
     if (zmq_ctx) {
         zmq_ctx_destroy(zmq_ctx);
+        WSACleanup();
         zmq_ctx = NULL;
     }
     pthread_mutex_unlock(&mutex);
@@ -50,7 +51,9 @@ struct mds_sub *mds_sub_open(const char *addr)
     int rc;
     void *ctx;
     struct mds_sub *sub;
-    
+    WSADATA wsaData;
+    WORD wVersionRequested;
+  
     assert(addr);
 
     READ_ONCE(zmq_ctx, ctx);
@@ -58,6 +61,9 @@ struct mds_sub *mds_sub_open(const char *addr)
     if (unlikely(!ctx)) {
         pthread_mutex_lock(&mutex);
         if (!zmq_ctx) {
+            /*初始化套接字*/
+            wVersionRequested = MAKEWORD(2, 2);
+            WSAStartup(wVersionRequested, &wsaData);
             zmq_ctx = zmq_ctx_new();
             if (unlikely(!zmq_ctx)) {
                 pthread_mutex_unlock(&mutex);

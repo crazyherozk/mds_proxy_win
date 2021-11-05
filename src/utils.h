@@ -146,9 +146,8 @@ static inline unsigned long long SWAP_8BYTES(unsigned long long v)
         ((v & 0x000000000000ff00ULL) << 40) | ((v & 0x00000000000000ff) << 56));
 }
 
-/*64位 主机与网络字节序 转换*/
-/*
-static inline long long htonll(long long v)
+/*64位 主机与网络字节序 转换
+static inline long long _htonll(long long v)
 {
 # ifdef __BIG_ENDIAN
      return v;
@@ -157,15 +156,14 @@ static inline long long htonll(long long v)
 # endif
 }
 
-static inline long long ntohll(long long v)
+static inline long long _ntohll(long long v)
 {
 # ifdef __BIG_ENDIAN
      return v;
 # else
      return SWAP_8BYTES(v);
 # endif
-}
-*/
+}*/
 
 const char *strerror_local(int code);
 uint32_t byteCrc32(const void *, size_t, uint32_t);

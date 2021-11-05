@@ -231,7 +231,7 @@ struct mds_file *mds_file_open(const char *path)
         goto fail;
     }
 
-    p = strrchr(file->name, '/');
+    p = strrchr(file->name, '\\');
     if (p) {
         p++;
     } else {
@@ -245,7 +245,7 @@ struct mds_file *mds_file_open(const char *path)
 
     file->closed = fname.seq < 0 ? false : true;
 
-    rc = _open(path, _O_RDONLY);
+    rc = _open(path, _O_RDONLY|_O_BINARY);
     if (unlikely(rc < 0))
         goto fail;
 
